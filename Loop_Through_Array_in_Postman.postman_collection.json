@@ -1,0 +1,120 @@
+{
+	"info": {
+		"_postman_id": "2c8a495e-f8ee-4205-b690-9fded080fbab",
+		"name": "Loop Through Array in Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Data endpoint",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0588cc24-135c-49d6-b9a4-64ba2028734b",
+						"exec": [
+							"const dataArray = [",
+							"    \"TWiYDwAAQBAJ\",",
+							"    \"8ahgioXQ9g8C\",",
+							"    \"K98hhw0IEHgC\",",
+							"    \"mDKphT8_XLsC\",",
+							"    \"XfDOcmJisn0C\",",
+							"    \"vxX2JGsN7PoC\",",
+							"    \"5x4uDwAAQBAJ\",",
+							"    \"mmlgAAAAMAAJ\",",
+							"    \"jetfAAAAMAAJ\",",
+							"    \"38xQHS4h0yEC\"",
+							"];",
+							"",
+							"let item = pm.globals.get(\"itemOfArray\");",
+							"",
+							"pm.globals.set(\"varVolume\", dataArray[item]);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d642db6b-cc73-4793-a342-83296b72ac7c",
+						"exec": [
+							"let item = pm.globals.get(\"itemOfArray\");",
+							"",
+							"pm.globals.set(\"itemOfArray\", Number(item) + 1);",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Output only in case of condition",
+							"if (jsonData.accessInfo.viewability !== \"NO_PAGES\") {",
+							"    // Case of output #1 - in Postman console",
+							"    console.log(`${jsonData.id} is ${jsonData.accessInfo.viewability}`);",
+							"    ",
+							"    // Case of output #2 - in Postman variable",
+							"    // Additional variable to avoid \"undefined\" previous data on the first iteration",
+							"    let previousResponse = (pm.globals.get(\"resposeData\") === undefined) ? '' : `${pm.globals.get(\"resposeData\")}, `;",
+							"    ",
+							"    // Represent output as a key:value data",
+							"    pm.globals.set(\"resposeData\", `${previousResponse}\"${jsonData.id}\": \"${jsonData.accessInfo.viewability}\"`);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.googleapis.com/books/v1/volumes/{{varVolume}}?key={{yourAPIKey}}",
+					"protocol": "https",
+					"host": [
+						"www",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"books",
+						"v1",
+						"volumes",
+						"{{varVolume}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{yourAPIKey}}"
+						}
+					]
+				},
+				"description": "* https://adequatica.medium.com/loop-through-array-in-postman-f944a5265d62 \n* https://developers.google.com/books/docs/v1/reference/volumes/get"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "c4851924-9e49-4b14-9e91-984e43015cff",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "89b61189-4f95-442b-ba70-da3bfc79d46e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

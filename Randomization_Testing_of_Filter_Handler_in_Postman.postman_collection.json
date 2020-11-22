@@ -1,0 +1,323 @@
+{
+	"info": {
+		"_postman_id": "e60faead-534f-4c99-9935-385f3823d233",
+		"name": "Randomization Testing of Filter Handler in Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Preconditions",
+			"item": [
+				{
+					"name": "Get catalog",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d96e2aa4-82d6-41cf-a9b3-f089aa1e17c3",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"// Collect and store data only if it exists",
+									"if (jsonData.catalogs.length > 0) {",
+									"    let allCatalogs = [];",
+									"    let allDataProducts = [];",
+									"",
+									"    jsonData.catalogs.forEach(",
+									"        element => allCatalogs.push(element.id)",
+									"    );",
+									"   // Method of parsing data depends on requested data schema",
+									"    for (var i = 0; i < allCatalogs.length; i++) {",
+									"        jsonData.catalogs[i].dataProducts.forEach(",
+									"            element => allDataProducts.push(element.id)",
+									"        );",
+									"    }",
+									"",
+									"    pm.environment.set(\"allCatalogs\", allCatalogs);",
+									"    pm.environment.set(\"allDataProducts\", allDataProducts);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://covid19.richdataservices.com/rds/api/catalog",
+							"protocol": "http",
+							"host": [
+								"covid19",
+								"richdataservices",
+								"com"
+							],
+							"path": [
+								"rds",
+								"api",
+								"catalog"
+							]
+						},
+						"description": "https://documenter.getpostman.com/view/2220438/SzYevv9u#245ce204-95a4-41cc-ac53-afd10c5a87b2"
+					},
+					"response": []
+				},
+				{
+					"name": "Get data product classifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c23b99cc-2845-4615-b489-b42301a22327",
+								"exec": [
+									"let preconditionItemFromArray = preconditionArray => {",
+									"    let tempArray = pm.environment.get(`${preconditionArray}`);",
+									"    // https://stackoverflow.com/a/5915122",
+									"    return tempArray[Math.floor(Math.random() * tempArray.length)];",
+									"};",
+									"",
+									"pm.environment.set(\"randomCatalog\", preconditionItemFromArray(\"allCatalogs\"));",
+									"pm.environment.set(\"randomDataProduct\", preconditionItemFromArray(\"allDataProducts\"));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "adba51d9-560c-4228-8c00-79dd4cfffd18",
+								"exec": [
+									"pm.test(\"Status code is 200 or 404\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 404]); ",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"// Collect and store data only if it exists",
+									"if (pm.response.code === 200) {",
+									"    // https://stackoverflow.com/a/5915122",
+									"    let randomClass = jsonData[Math.floor(Math.random() * jsonData.length)];",
+									"",
+									"    pm.environment.set(\"randomClassificationId\", randomClass.id);",
+									"    pm.environment.set(\"randomClassification\", randomClass.uri);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://covid19.richdataservices.com/rds/api/catalog/{{randomCatalog}}/{{randomDataProduct}}/classifications",
+							"protocol": "https",
+							"host": [
+								"covid19",
+								"richdataservices",
+								"com"
+							],
+							"path": [
+								"rds",
+								"api",
+								"catalog",
+								"{{randomCatalog}}",
+								"{{randomDataProduct}}",
+								"classifications"
+							]
+						},
+						"description": "https://documenter.getpostman.com/view/2220438/SzYevv9u#b763ba93-d3dd-419e-83a7-85b1ea5e49ed"
+					},
+					"response": []
+				},
+				{
+					"name": "Classification Codes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dbccaf4e-ceec-4ae8-b288-7b96737a87ab",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"// Collect data only if it exists",
+									"if (jsonData.length > 0) {",
+									"    let allCodes = [];",
+									"",
+									"    jsonData.forEach(",
+									"        element => allCodes.push(element.codeValue)",
+									"    );",
+									"",
+									"    pm.environment.set(\"allCodes\", allCodes);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://covid19.richdataservices.com/rds/api/catalog/{{randomCatalog}}/{{randomDataProduct}}/classification/{{randomClassification}}/codes",
+							"protocol": "https",
+							"host": [
+								"covid19",
+								"richdataservices",
+								"com"
+							],
+							"path": [
+								"rds",
+								"api",
+								"catalog",
+								"{{randomCatalog}}",
+								"{{randomDataProduct}}",
+								"classification",
+								"{{randomClassification}}",
+								"codes"
+							]
+						},
+						"description": "https://documenter.getpostman.com/view/2220438/SzYevv9u#d9b1a38d-e08c-4e91-b04f-e0aef91d7b22"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Build your own select query",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a5e36230-baa5-4bf8-bba6-0b84cd98233e",
+						"exec": [
+							"let preconditionItemFromArray = preconditionArray => {",
+							"    let tempArray = pm.environment.get(`${preconditionArray}`);",
+							"",
+							"    if (Array.isArray(tempArray)) {",
+							"        // https://stackoverflow.com/a/5915122",
+							"        return tempArray[Math.floor(Math.random() * tempArray.length)];",
+							"    } else {",
+							"        // Data type of manually set environment variables does not save",
+							"        let tempStringIntoArray = tempArray.split(\",\");",
+							"        return tempStringIntoArray[Math.floor(Math.random() * tempStringIntoArray.length)];",
+							"    }",
+							"};",
+							"",
+							"pm.environment.set(\"randomCode\", preconditionItemFromArray(\"allCodes\"));",
+							"pm.environment.set(\"randomFormat\", preconditionItemFromArray(\"allFormats\"));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "abea7f60-182d-4703-9d70-702ec1a58606",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Response has some data\", function () {",
+							"    pm.expect(Object.keys(jsonData).length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://covid19.richdataservices.com/rds/api/query/{{randomCatalog}}/{{randomDataProduct}}/select?collimit={{$randomInt}}&count={{$randomBoolean}}&format={{randomFormat}}&inject={{$randomBoolean}}&limit={{$randomInt}}&metadata={{$randomBoolean}}&where=({{randomClassificationId}}%3D{{randomCode}})",
+					"protocol": "https",
+					"host": [
+						"covid19",
+						"richdataservices",
+						"com"
+					],
+					"path": [
+						"rds",
+						"api",
+						"query",
+						"{{randomCatalog}}",
+						"{{randomDataProduct}}",
+						"select"
+					],
+					"query": [
+						{
+							"key": "collimit",
+							"value": "{{$randomInt}}",
+							"description": "Use dynamic variable"
+						},
+						{
+							"key": "count",
+							"value": "{{$randomBoolean}}",
+							"description": "Use dynamic variable"
+						},
+						{
+							"key": "format",
+							"value": "{{randomFormat}}",
+							"description": "Randomize in pre-request script"
+						},
+						{
+							"key": "inject",
+							"value": "{{$randomBoolean}}",
+							"description": "Use dynamic variable"
+						},
+						{
+							"key": "limit",
+							"value": "{{$randomInt}}",
+							"description": "Use dynamic variable"
+						},
+						{
+							"key": "metadata",
+							"value": "{{$randomBoolean}}",
+							"description": "Use dynamic variable"
+						},
+						{
+							"key": "where",
+							"value": "({{randomClassificationId}}%3D{{randomCode}})",
+							"description": "Get from environment and randomize in pre-request script"
+						}
+					]
+				},
+				"description": "https://documenter.getpostman.com/view/2220438/SzYevv9u#ca3edafd-5683-4cc1-aab1-0c497d1186dc"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5eedd9ac-6182-4e49-8e4a-25ce3f7fa65b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "94c98068-e1bb-43a1-9852-b36da1874df2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "11c9d8ea-d823-4ccb-b6cf-ac3991761507",
+		"name": "Brief Comparison of Responses in Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a7ec8749-285f-4803-84ce-3fa71454a2bb",
+						"exec": [
+							"pm.test(\"Status is OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"let jsonData = pm.response.json();",
+							"pm.globals.set(\"response\", jsonData);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spacexdata.com/v4/capsules/{{capsuleId1}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spacexdata",
+						"com"
+					],
+					"path": [
+						"v4",
+						"capsules",
+						"{{capsuleId1}}"
+					]
+				},
+				"description": "* https://adequatica.medium.com/brief-comparison-of-responses-in-postman-aea23ee9d342 \n* https://github.com/r-spacex/SpaceX-API/blob/master/docs/v4/README.md \n* https://github.com/r-spacex/SpaceX-API/blob/master/docs/v4/capsules/one.md"
+			},
+			"response": []
+		},
+		{
+			"name": "2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c63deea4-21a7-49fc-92f3-cf3996d7fe57",
+						"exec": [
+							"pm.test(\"Status is OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"let jsonData = pm.response.json();",
+							"let firstResponse = pm.globals.get(\"response\");",
+							"pm.test(\"Responses are equal\", function () {",
+							"    pm.expect(jsonData).to.deep.equal(firstResponse);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.spacexdata.com/v4/capsules/{{capsuleId2}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"spacexdata",
+						"com"
+					],
+					"path": [
+						"v4",
+						"capsules",
+						"{{capsuleId2}}"
+					]
+				},
+				"description": "* https://adequatica.medium.com/brief-comparison-of-responses-in-postman-aea23ee9d342 \n* https://github.com/r-spacex/SpaceX-API/blob/master/docs/v4/README.md \n* https://github.com/r-spacex/SpaceX-API/blob/master/docs/v4/capsules/one.md"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "4ff7d3ed-445c-4903-9e9f-391c9f287115",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f40db9c1-f474-4292-9e83-b007d02389e9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
