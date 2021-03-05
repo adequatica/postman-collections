@@ -1,0 +1,81 @@
+{
+	"info": {
+		"_postman_id": "8921d3be-bc68-4c70-af77-28821e4d83aa",
+		"name": "Astronomy Picture of the Day",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://api.nasa.gov/planetary/apod",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// https://stackoverflow.com/a/5511591",
+							"// Для указания даты относительно сегодняшнего числа (-1 — означает вчера):",
+							"let date = new Date(new Date().setDate(new Date().getDate() - 1));",
+							"",
+							"// Если просто нужно сегодняшнее число, то:",
+							"// let date = new Date();",
+							"",
+							"// В переменную date записывается время в формате:",
+							"// Wed Nov 25 2020 15:24:40 GMT+0300 (Moscow Standard Time)",
+							"",
+							"// Если месяц надо преобразовать в MM (как 03):",
+							"let dateMM;",
+							"//  +1 делаем из-за того, что в JS месяцы начинаются с 0",
+							"if ((date.getMonth() + 1).length === 1){",
+							"    dateMM = `0${date.getMonth() + 1}`;",
+							"} else {",
+							"    dateMM = date.getMonth() + 1;",
+							"}",
+							"",
+							"// Если дату надо преобразовать в DD (как 05):",
+							"let dateDD;",
+							"if (date.getDate() === 1) {",
+							"    dateDD = `0${date.getDate()}`;",
+							"} else {",
+							"    dateDD = date.getDate();",
+							"}",
+							"",
+							"// Собираем дату вида: 2020-03-05",
+							"let dateDemanded = `${date.getFullYear()}-${dateMM}-${dateDD}`",
+							"",
+							"pm.globals.set(\"dateKey\", dateDemanded);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.nasa.gov/planetary/apod?date={{dateKey}}&api_key=DEMO_KEY",
+					"protocol": "https",
+					"host": [
+						"api",
+						"nasa",
+						"gov"
+					],
+					"path": [
+						"planetary",
+						"apod"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "{{dateKey}}"
+						},
+						{
+							"key": "api_key",
+							"value": "DEMO_KEY"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
