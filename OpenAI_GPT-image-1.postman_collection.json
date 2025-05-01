@@ -1,0 +1,75 @@
+{
+	"info": {
+		"_postman_id": "9e957477-9a0e-47ee-ba65-4190bed88020",
+		"name": "OpenAI GPT-image-1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21074815"
+	},
+	"item": [
+		{
+			"name": "https://api.openai.com/v1/images/generations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"function visualizerPayload() {",
+							"    const jsonData = pm.response.json();",
+							"    ",
+							"    return {response: jsonData};",
+							"}",
+							"",
+							"// {{response.<path>}} is your base64 image in your response body",
+							"const visualizerTemplate = `",
+							"<img src=\"data:image/png;base64,{{response.data.[0].b64_json}}\" />",
+							"`;",
+							"",
+							"pm.visualizer.set(visualizerTemplate, visualizerPayload());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"user-agent": true,
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{openai_api_key}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"model\": \"gpt-image-1\",\n    \"prompt\": \"A high-performance racing yacht on a river, caught in a broach under strong wind. The gennaker is partially collapsed and twisting, the boat is heeled over dramatically, with spray flying off the bow. The crew is actively scrambling to regain control. The river is choppy with wind-whipped waves, surrounded by lush green banks. The sky is partly cloudy with streaks of sunlight breaking through, highlighting the intense action and dynamic motion. Styled like an early 90s VHS image — grainy texture, muted colors with a slight blue tint, visible scan lines, evoking retro analog video footage. Styled like an early 90s VHS image — grainy texture, muted colors with a slight blue tint, visible scan lines, evoking retro analog video footage.\",\n    \"n\": 1,\n    \"size\": \"1024x1024\",\n    \"quality\": \"low\"\n}"
+				},
+				"url": {
+					"raw": "https://api.openai.com/v1/images/generations",
+					"protocol": "https",
+					"host": [
+						"api",
+						"openai",
+						"com"
+					],
+					"path": [
+						"v1",
+						"images",
+						"generations"
+					]
+				},
+				"description": "[https://platform.openai.com/docs/api-reference/images/create](https://platform.openai.com/docs/api-reference/images/create)"
+			},
+			"response": []
+		}
+	]
+}
