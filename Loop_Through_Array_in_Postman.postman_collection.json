@@ -89,7 +89,7 @@
 						}
 					]
 				},
-				"description": "* https://adequatica.medium.com/loop-through-array-in-postman-f944a5265d62 \n* https://developers.google.com/books/docs/v1/reference/volumes/get"
+				"description": "https://developers.google.com/books/docs/v1/reference/volumes/get"
 			},
 			"response": []
 		}
