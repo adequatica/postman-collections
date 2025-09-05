@@ -67,7 +67,7 @@
 						"generations"
 					]
 				},
-				"description": "[https://platform.openai.com/docs/api-reference/images/create](https://platform.openai.com/docs/api-reference/images/create)"
+				"description": "https://platform.openai.com/docs/api-reference/images/create"
 			},
 			"response": []
 		}

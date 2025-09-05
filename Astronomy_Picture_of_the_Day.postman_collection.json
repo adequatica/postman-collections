@@ -74,7 +74,8 @@
 							"value": "DEMO_KEY"
 						}
 					]
-				}
+				},
+				"description": "https://api.nasa.gov/"
 			},
 			"response": []
 		}
